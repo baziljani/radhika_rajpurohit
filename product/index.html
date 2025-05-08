@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Product Name - Radhika Rajpurohit</title>
+        <link rel="stylesheet" href="../../assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/product.css">
+    </head>
+    <body>
+        <div data-include="/include/nav.html"></div>
+
+        <main class="product-page">
+            <div class="container">
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img src="/assets/images/product/saree.jpg"
+                            id="mainImage" alt="Banarasi Silk Saree">
+                    </div>
+                    <div class="thumbnail-container">
+                        <img
+                            src="/assets//images/product/saree2.jpg"
+                            class="thumbnail" alt="Thumbnail 1">
+                        <img
+                            src="/assets/images/product/saree3.jpg"
+                            class="thumbnail" alt="Thumbnail 2">
+                    </div>
+                </div>
+
+                <div class="product-details">
+                    <h1>Banarasi Silk Saree</h1>
+                    <div class="price">₹5,999</div>
+                    <div class="description">
+                        <p>Handwoven Banarasi silk saree with intricate zari
+                            work. Perfect for weddings and festive
+                            occasions.</p>
+                    </div>
+
+                    <div class="product-options">
+                        <div class="option">
+                            <label for="color">Color:</label>
+                            <select id="color">
+                                <option>Red</option>
+                                <option>Green</option>
+                            </select>
+                        </div>
+
+                        <div class="option">
+                            <label for="size">Size:</label>
+                            <select id="size">
+                                <option>Free Size</option>
+                            </select>
+                        </div>
+
+                        <div class="quantity">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" value="1"
+                                min="1">
+                        </div>
+                    </div>
+
+                    <button class="add-to-cart">Add to Cart</button>
+                    <button class="wishlist-btn"><i class="far fa-heart"></i>
+                        Add to Wishlist</button>
+                </div>
+            </div>
+        </main>
+
+        <div data-include="/include/footer.html"></div>
+        <script src="../../assets/js/main.js"></script>
+        <script src="../../assets/js/product.js"></script>
+        <script src="/assets/js/includecomponent.js"></script>
+    </body>
+</html>

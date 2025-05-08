@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your Cart - Radhika Rajpurohit</title>
+        <link rel="stylesheet" href="../../assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/cart.css">
+    </head>
+    <body>
+        <div data-include="/include/nav.html"></div>
+
+        <main class="cart-page">
+            <div class="container">
+                <h1>Your Shopping Cart</h1>
+
+                <div class="cart-container">
+                    <div class="cart-items" id="cartItems"></div>
+
+                    <div class="cart-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">₹0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span id="shipping">₹99</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Discount</span>
+                            <span id="discount">₹0</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">₹99</span>
+                        </div>
+
+                        <div class="coupon-section">
+                            <input type="text" id="couponCode"
+                                placeholder="Enter Coupon Code">
+                            <button id="applyCoupon">Apply</button>
+                        </div>
+
+                        <div class="gift-card-section">
+                            <input type="text" id="giftCardCode"
+                                placeholder="Enter Gift Card Code">
+                            <button id="applyGiftCard">Apply</button>
+                        </div>
+
+                        <a href="/checkout/checkout.html" class="checkout-btn"
+                            id="checkoutBtn">
+                            Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div data-include="/include/footer.html"></div>
+        <script src="/assets/js/cart.js"></script>
+        <script src="../../assets/js/main.js"></script>
+        <script src="/assets/js/includecomponent.js"></script>
+    </body>
+</html>

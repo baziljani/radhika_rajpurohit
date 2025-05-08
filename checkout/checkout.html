@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Checkout - Radhika Rajpurohit</title>
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <link rel="stylesheet" href="../assets/css/checkout.css">
+        <link rel="stylesheet" href="/assets/css/cart.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+    <body>
+        <div data-include="/include/nav.html"></div>
+
+        <main class="checkout-page">
+            <div class="container">
+                <div class="checkout-progress">
+                    <div class="progress-step active">1. ADDRESS</div>
+                    <div class="progress-step">2. PAYMENT</div>
+                    <div class="progress-step">3. REVIEW</div>
+                </div>
+
+                <div class="checkout-grid">
+                    <div class="checkout-main">
+                        <section class="checkout-section">
+                            <h2 class="section-title">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Delivery Address
+                                <button class="edit-btn"
+                                    id="editAddress">EDIT</button>
+                            </h2>
+
+                            <div class="address-card selected">
+                                <div class="address-details"
+                                    id="addressDetails">
+                                    <h3>John Doe</h3>
+                                    <p>123 Fashion Street,</p>
+                                    <p>Next to Designers Plaza,</p>
+                                    <p>Mumbai - 400001</p>
+                                    <p>Mobile: +91 98765 43210</p>
+                                </div>
+                            </div>
+
+                            <div class="address-form" style="display: none;">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" id="fullName"
+                                            placeholder="Full Name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mobile Number</label>
+                                        <input type="tel" id="mobileNumber"
+                                            placeholder="Mobile Number"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Pincode</label>
+                                        <input type="text" id="pincode"
+                                            placeholder="Pincode" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <textarea id="address" rows="2"
+                                            placeholder="Address"
+                                            required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Landmark</label>
+                                        <input type="text" id="landmark"
+                                            placeholder="Landmark">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <input type="text" id="city"
+                                            placeholder="City" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>State</label>
+                                        <input type="text" id="state"
+                                            placeholder="State" required>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn-outline"
+                                        id="cancelAddress">CANCEL</button>
+                                    <button type="button" class="btn-primary"
+                                        id="saveAddress">SAVE ADDRESS</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="checkout-section">
+                            <h2 class="section-title">
+                                <i class="fas fa-credit-card"></i>
+                                Payment Options
+                            </h2>
+
+                            <div class="payment-options">
+                                <div class="payment-card active">
+                                    <div class="card-header">
+                                        <input type="radio" name="payment"
+                                            id="creditCard" checked>
+                                        <label for="creditCard">Credit/Debit
+                                            Card</label>
+                                        <div class="card-icons">
+                                            <i class="fab fa-cc-visa"
+                                                title="Visa"></i>
+                                            <i class="fab fa-cc-mastercard"
+                                                title="Mastercard"></i>
+                                            <i class="fab fa-cc-amex"
+                                                title="American Express"></i>
+                                            <i class="fab fa-cc-discover"
+                                                title="Discover"></i>
+                                        </div>
+                                    </div>
+                                    <div class="card-details">
+                                        <div class="form-group">
+                                            <input type="text"
+                                                placeholder="Card Number"
+                                                class="card-input">
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <input type="text"
+                                                    placeholder="MM/YY">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text"
+                                                    placeholder="CVV">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="payment-card">
+                                    <div class="card-header">
+                                        <input type="radio" name="payment"
+                                            id="upi">
+                                        <label for="upi">UPI</label>
+                                        <img
+                                            src="../assets/images/product/upilogo.png"
+                                            alt="UPI" class="upi-logo">
+                                    </div>
+                                    <div class="card-details">
+                                        <div class="form-group">
+                                            <input type="text"
+                                                placeholder="Enter UPI ID">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="order-summary">
+                        <div class="summary-header">
+                            <h2>Order Summary</h2>
+                            <a href="/cart/cart.html" class="edit-cart">Edit
+                                Cart</a>
+                        </div>
+
+                        <div class="summary-items" id="summaryItems"></div>
+
+                        <div class="price-breakup">
+                            <table class="price-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Subtotal</td>
+                                        <td id="subtotal">₹0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Delivery</td>
+                                        <td id="delivery">₹99</td>
+                                    </tr>
+                                    <tr class="total">
+                                        <td>Total</td>
+                                        <td id="total">₹99</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="secure-checkout">
+                            <i class="fas fa-lock"></i>
+                            <span>100% Secure Checkout</span>
+                        </div>
+
+                        <button class="place-order-btn" id="placeOrderBtn">
+                            <i class="fas fa-lock"></i>
+                            PLACE ORDER
+                        </button>
+                    </div>
+                </main>
+
+                <div data-include="/include/footer.html"></div>
+
+                <script src="/assets/js/includecomponent.js"></script>
+                <script src="/assets/js/checkout.js"></script>
+            </body>
+        </html>
