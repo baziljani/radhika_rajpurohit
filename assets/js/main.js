@@ -92,16 +92,19 @@ function updateCartCount() {
 function addToCart(productCard) {
     const productId = parseInt(productCard.dataset.id);
     const product = products.find(p => p.id === productId);
-    
+
     if (!product) return;
 
     const existingItem = cart.find(item => item.id === productId);
-    
+
     if (existingItem) {
         existingItem.quantity = (existingItem.quantity || 1) + 1;
     } else {
         cart.push({
-            ...product,
+            id: product.id,
+            title: product.name,
+            price: Number(product.price),
+            image: product.image,
             quantity: 1,
             selectedColor: product.colors[0],
             selectedSize: product.sizes[0]
@@ -110,13 +113,13 @@ function addToCart(productCard) {
 
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
-    
+
     const cartBtn = document.querySelector('.cart-icon');
     if (cartBtn) {
         cartBtn.classList.add('animate-bounce');
         setTimeout(() => cartBtn.classList.remove('animate-bounce'), 1000);
     }
-    
+
     showToast(`${product.name} added to cart!`);
 }
 
@@ -277,6 +280,44 @@ function setupCarousel() {
         animationID = requestAnimationFrame(animation);
     }
 }
+
+const mainImage = document.getElementById('mainImage');
+mainImage.addEventListener('mousemove', (e) => {
+    const rect = mainImage.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    mainImage.style.transformOrigin = `${x}px ${y}px`;
+    mainImage.style.transform = 'scale(1.5)';
+});
+
+mainImage.addEventListener('mouseleave', () => {
+    mainImage.style.transform = 'scale(1)';
+    mainImage.style.transformOrigin = 'center';
+});
+
+const thumbnails = document.querySelectorAll('.thumbnail');
+thumbnails.forEach((thumbnail) => {
+    thumbnail.addEventListener('click', () => {
+        mainImage.src = thumbnail.src;
+    });
+});
+
+const addToCartButton = document.querySelector('.add-to-cart');
+addToCartButton.addEventListener('click', () => {
+    const product = {
+        name: document.querySelector('.product-details h1').textContent,
+        price: document.querySelector('.product-details .price').textContent,
+        quantity: document.getElementById('quantity').value,
+        color: document.getElementById('color').value,
+        size: document.getElementById('size').value,
+        image: document.getElementById('mainImage').src
+    };
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push(product);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.location.href = '/cart/cart.html';
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts();

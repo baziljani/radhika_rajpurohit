@@ -4,18 +4,64 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Your Cart - Radhika Rajpurohit</title>
-        <link rel="stylesheet" href="../../assets/css/style.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="/assets/css/style.css">
         <link rel="stylesheet" href="/assets/css/cart.css">
     </head>
     <body>
         <div data-include="/include/nav.html"></div>
 
+        <div class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </div>
+
         <main class="cart-page">
             <div class="container">
                 <h1>Your Shopping Cart</h1>
 
+                <div class="filter-section">
+                    <h2>Filter Your Cart</h2>
+                    <div class="filter-options">
+                        <label for="categoryFilter">Category:</label>
+                        <select id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="fashion">Fashion</option>
+                            <option value="home">Home</option>
+                        </select>
+                        <label for="priceFilter">Price:</label>
+                        <select id="priceFilter">
+                            <option value="all">All Prices</option>
+                            <option value="low">Low to High</option>
+                            <option value="high">High to Low</option>
+                        </select>
+                        <button id="applyFilters" class="btn-primary">Apply
+                            Filters</button>
+                    </div>
+                </div>
+
                 <div class="cart-container">
-                    <div class="cart-items" id="cartItems"></div>
+                    <div class="cart-items" id="cartItems">
+                        <div class="cart-item">
+                            <div class="cart-item-img">
+                                <img
+                                    src="/assets/images/placeholder-product.jpg"
+                                    alt="Product Image">
+                            </div>
+                            <div class="item-details">
+                                <h4 class="item-title">Sample Product</h4>
+                                <p class="item-price">₹99.99</p>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn">-</button>
+                                    <span>1</span>
+                                    <button class="qty-btn">+</button>
+                                </div>
+                                <button class="remove-btn">Remove</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="cart-summary">
                         <h3>Order Summary</h3>
@@ -48,18 +94,193 @@
                             <button id="applyGiftCard">Apply</button>
                         </div>
 
-                        <a href="/checkout/checkout.html" class="checkout-btn"
-                            id="checkoutBtn">
-                            Proceed to Checkout
-                        </a>
+                        <button class="checkout-btn" id="checkoutBtn">Proceed to
+                            Checkout</button>
                     </div>
                 </div>
             </div>
         </main>
 
         <div data-include="/include/footer.html"></div>
-        <script src="/assets/js/cart.js"></script>
-        <script src="../../assets/js/main.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let discount = 0;
+                
+                if (!Array.isArray(cart)) {
+                    cart = [];
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                }
+                
+                const cartItemsContainer = document.getElementById('cartItems');
+                const subtotalElement = document.getElementById('subtotal');
+                const discountElement = document.getElementById('discount');
+                const totalElement = document.getElementById('total');
+                const couponCodeInput = document.getElementById('couponCode');
+                const applyCouponButton = document.getElementById('applyCoupon');
+                const giftCardInput = document.getElementById('giftCardCode');
+                const applyGiftCardButton = document.getElementById('applyGiftCard');
+                const checkoutButton = document.getElementById('checkoutBtn');
+                
+                const renderCartItems = () => {
+                    cartItemsContainer.innerHTML = '';
+                    let subtotal = 0;
+                    
+                    if (cart.length === 0) {
+                        cartItemsContainer.innerHTML = `
+                            <div class="empty-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>Your cart is empty</p>
+                                <a href="/shop/shop.html" class="shop-now-btn">Continue Shopping</a>
+                            </div>
+                        `;
+                        checkoutButton.disabled = true;
+                        return;
+                    }
+                    
+                    checkoutButton.disabled = false;
+                    
+                    cart.forEach((item, index) => {
+                        const cartItem = document.createElement('div');
+                        cartItem.className = 'cart-item';
+                        cartItem.innerHTML = `
+                            <div class="cart-item-image">
+                                <img src="${item.image}" alt="${item.title}" 
+                                     onerror="this.src='/assets/images/placeholder-product.jpg'">
+                            </div>
+                            <div class="cart-item-details">
+                                <h4>${item.title}</h4>
+                                <p class="price">₹${Number(item.price).toFixed(2)}</p>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn decrease" data-index="${index}">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span class="quantity">${item.quantity}</span>
+                                    <button class="quantity-btn increase" data-index="${index}">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <button class="remove-btn" data-index="${index}">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        `;
+                        cartItemsContainer.appendChild(cartItem);
+                        subtotal += Number(item.price) * item.quantity;
+                    });
+                    
+                    subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+                    const shipping = subtotal > 0 ? 99 : 0;
+                    document.getElementById('shipping').textContent = `₹${shipping.toFixed(2)}`;
+                    totalElement.textContent = `₹${(subtotal + shipping - discount).toFixed(2)}`;
+                    
+                    addCartEventListeners();
+                    updateOrderSummary();
+                };
+                
+                const addCartEventListeners = () => {
+                    document.querySelectorAll('.increase').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const index = e.target.closest('button').dataset.index;
+                            cart[index].quantity += 1;
+                            saveCart();
+                            renderCartItems();
+                        });
+                    });
+                    
+                    document.querySelectorAll('.decrease').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const index = e.target.closest('button').dataset.index;
+                            if (cart[index].quantity > 1) {
+                                cart[index].quantity -= 1;
+                            } else {
+                                cart.splice(index, 1);
+                            }
+                            saveCart();
+                            renderCartItems();
+                        });
+                    });
+                    
+                    document.querySelectorAll('.remove-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const index = e.target.closest('button').dataset.index;
+                            cart.splice(index, 1);
+                            saveCart();
+                            renderCartItems();
+                        });
+                    });
+                };
+                
+                const saveCart = () => {
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                };
+
+                function updateCartCount(){
+                    const totalItems=cart.reduce((total, item)=>total+item.quandity,0);
+                    const cartCountElements=document.querySelectorAll('.cart-count');
+                    cartCountElements.forEach(element =>{
+                        element.textContent = totalItems;
+                    });
+                }
+                
+                applyCouponButton.addEventListener('click', () => {
+                    const couponCode = couponCodeInput.value.trim();
+                    if (couponCode === "SAVE10") {
+                        const subtotal = calculateSubtotal();
+                        discount = subtotal * 0.1;
+                        discountElement.textContent = `-₹${discount.toFixed(2)}`;
+                        updateTotal();
+                        alert("10% discount applied!");
+                    } else {
+                        alert("Invalid coupon code. Try 'SAVE10' for 10% off.");
+                    }
+                });
+                
+                applyGiftCardButton.addEventListener('click', () => {
+                    const giftCardCode = giftCardInput.value.trim();
+                    if (giftCardCode === "GIFT500") {
+                        discount += 500;
+                        discountElement.textContent = `-₹${discount.toFixed(2)}`;
+                        updateTotal();
+                        alert("₹500 gift card applied!");
+                    } else {
+                        alert("Invalid gift card code. Try 'GIFT500' for ₹500 off.");
+                    }
+                });
+                
+                const calculateSubtotal = () => {
+                    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                };
+                
+                const updateTotal = () => {
+                    const subtotal = calculateSubtotal();
+                    const shipping = subtotal > 0 ? 99 : 0;
+                    totalElement.textContent = `₹${(subtotal + shipping - discount).toFixed(2)}`;
+                };
+                
+                checkoutButton.addEventListener('click', () => {
+                    if (cart.length === 0) {
+                        alert("Your cart is empty. Add some items before checkout.");
+                        return;
+                    }
+                    
+                    const orderSummary = {
+                        subtotal: calculateSubtotal(),
+                        shipping: 99,
+                        discount: discount,
+                        total: calculateSubtotal() + 99 - discount,
+                        items: cart
+                    };
+                    
+                    localStorage.setItem('orderSummary', JSON.stringify(orderSummary));
+                    window.location.href = '/checkout/checkout.html';
+                });
+                
+                renderCartItems();
+            });
+        </script>
         <script src="/assets/js/includecomponent.js"></script>
     </body>
 </html>

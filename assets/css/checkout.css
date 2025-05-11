@@ -118,6 +118,56 @@
     gap: 1rem;
 }
 
+.order-summary {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.order-summary .summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.order-summary .summary-header h2 {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.order-summary .summary-header .edit-cart {
+    font-size: 0.9rem;
+    color: #ff3e6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.order-summary .summary-header .edit-cart:hover {
+    color: #e63946;
+}
+
+.price-breakup table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.price-breakup .price-table td {
+    padding: 10px 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.price-breakup tr:last-child td {
+    font-weight: bold;
+    color: #333;
+}
+
 .place-order-btn {
     width: 100%;
     padding: 1.2rem;
@@ -189,4 +239,113 @@
     font-weight: 700;
     font-size: 1.2rem;
     border-top: 2px solid #333;
+}
+
+#upiAppsContainer {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.upi-app-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 50px;
+    margin: 5px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upi-app-btn:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.upi-app-btn:active {
+    transform: scale(0.95);
+}
+
+.upi-logo {
+    float: right;
+    margin-right: 10px;
+    width: 60px;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.upi-logo1 {
+    float: right;
+    margin-left: 900px;
+    width: 50px;
+    height: 50px;
+    border-radius: 5px solid black;
+    cursor: pointer;
+}
+
+#verifyUpiBtn {
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#verifyUpiBtn:hover {
+    background-color: #d63384;
+    transform: scale(1.05);
+}
+
+#verifyUpiBtn:active {
+    transform: scale(0.95);
+}
+
+#verifyCardDetails {
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#verifyCardDetails:hover {
+    background-color: #d63384;
+    transform: scale(1.05);
+}
+
+#verifyCardDetails:active {
+    transform: scale(0.95);
+}
+
+input[type="text"], input[type="tel"], input[type="email"], input[type="password"], textarea {
+    width: 90%;
+    padding: 8px;
+    margin: 6px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="tel"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
+    border-color: #d63384;
+    box-shadow: 0 0 4px rgba(214, 51, 132, 0.4);
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
 }

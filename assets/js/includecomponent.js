@@ -31,7 +31,7 @@ function initDynamicComponents() {
     }
 
     document.addEventListener('click', (e) => {
-        if (!mainNav.contains(e.target) && !mobileToggle.contains(e.target)) {
+        if (mainNav && mobileToggle && !mainNav.contains(e.target) && !mobileToggle.contains(e.target)) {
             mainNav.classList.remove('active');
             mobileToggle.classList.remove('active');
         }

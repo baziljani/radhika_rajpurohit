@@ -3,82 +3,104 @@ document.addEventListener('DOMContentLoaded', () => {
     const subtotalElement = document.getElementById('subtotal');
     const discountElement = document.getElementById('discount');
     const totalElement = document.getElementById('total');
-    const couponCodeInput = document.getElementById('couponCode');
-    const applyCouponButton = document.getElementById('applyCoupon');
-    const giftCardInput = document.getElementById('giftCardCode');
-    const applyGiftCardButton = document.getElementById('applyGiftCard');
     const checkoutButton = document.getElementById('checkoutBtn');
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let subtotal = 0;
-    let discount = 0;
 
+    // Fix the updateCartCount function to correctly calculate the total items
+    function updateCartCount() {
+        const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0); // Ensure quantity is a number
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(element => {
+            element.textContent = totalItems;
+            element.style.display = totalItems > 0 ? 'inline-block' : 'none';
+        });
+    }
+
+    // Ensure placeholder image path is correct
     const renderCartItems = () => {
         cartItemsContainer.innerHTML = '';
-        subtotal = 0;
+        let subtotal = 0;
 
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = `
                 <div class="empty-cart">
-                    <p>Your cart is empty. Start shopping now!</p>
-                    <a href="/shop/shop.html" class="shop-now-btn">Shop Now</a>
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty</p>
+                    <a href="/shop/shop.html" class="shop-now-btn">Continue Shopping</a>
                 </div>
             `;
             subtotalElement.textContent = '₹0';
-            totalElement.textContent = '₹99';
+            totalElement.textContent = '₹0';
+            checkoutButton.disabled = true;
+            updateCartCount(); // Ensure cart count is updated when cart is empty
             return;
         }
 
+        checkoutButton.disabled = false;
+
         cart.forEach((item, index) => {
-            const itemRow = document.createElement('div');
-            itemRow.classList.add('cart-item');
-            itemRow.innerHTML = `
-                <img src="${item.image}" alt="${item.title}" class="cart-item-image">
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
+                <div class="cart-item-image">
+                    <img src="${item.image}" alt="${item.title}" onerror="this.src='/assets/images/placeholder-product.jpg'">
+                </div>
                 <div class="cart-item-details">
                     <h4>${item.title}</h4>
-                    <p>Price: ₹${item.price}</p>
+                    <p class="price">₹${Number(item.price).toFixed(2)}</p>
                     <div class="quantity-controls">
-                        <button class="decrease-qty" data-index="${index}">-</button>
-                        <span class="item-quantity">${item.quantity}</span>
-                        <button class="increase-qty" data-index="${index}">+</button>
+                        <button class="quantity-btn decrease" data-index="${index}">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button class="quantity-btn increase" data-index="${index}">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
-                    <button class="remove-item" data-index="${index}">Remove</button>
+                    <button class="remove-btn" data-index="${index}">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
                 </div>
             `;
-            cartItemsContainer.appendChild(itemRow);
-            subtotal += item.price * item.quantity;
+            cartItemsContainer.appendChild(cartItem);
+            subtotal += Number(item.price) * item.quantity;
         });
 
-        subtotalElement.textContent = `₹${subtotal}`;
-        totalElement.textContent = `₹${subtotal + 99 - discount}`;
+        subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+        const shipping = subtotal > 0 ? 99 : 0;
+        totalElement.textContent = `₹${(subtotal + shipping).toFixed(2)}`;
 
         addCartEventListeners();
+        updateCartCount(); // Ensure cart count is updated after rendering items
     };
 
     const addCartEventListeners = () => {
-        document.querySelectorAll('.increase-qty').forEach(button => {
+        document.querySelectorAll('.increase').forEach(button => {
             button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
+                const index = e.target.closest('button').dataset.index;
                 cart[index].quantity += 1;
                 saveCart();
                 renderCartItems();
             });
         });
 
-        document.querySelectorAll('.decrease-qty').forEach(button => {
+        document.querySelectorAll('.decrease').forEach(button => {
             button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
+                const index = e.target.closest('button').dataset.index;
                 if (cart[index].quantity > 1) {
                     cart[index].quantity -= 1;
-                    saveCart();
-                    renderCartItems();
+                } else {
+                    cart.splice(index, 1);
                 }
+                saveCart();
+                renderCartItems();
             });
         });
 
-        document.querySelectorAll('.remove-item').forEach(button => {
+        document.querySelectorAll('.remove-btn').forEach(button => {
             button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
+                const index = e.target.closest('button').dataset.index;
                 cart.splice(index, 1);
                 saveCart();
                 renderCartItems();
@@ -86,51 +108,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Ensure updateCartCount is called after any cart modification
     const saveCart = () => {
         localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
     };
 
-    applyCouponButton.addEventListener('click', () => {
-        const couponCode = couponCodeInput.value.trim();
-        if (couponCode === "SAVE10") {
-            discount = subtotal * 0.1;
-            discountElement.textContent = `₹${discount.toFixed(2)}`;
-            totalElement.textContent = `₹${(subtotal + 99 - discount).toFixed(2)}`;
-            alert("Coupon applied successfully!");
-        } else {
-            alert("Invalid coupon code.");
-        }
-    });
-
-    applyGiftCardButton.addEventListener('click', () => {
-        const giftCardCode = giftCardInput.value.trim();
-        if (giftCardCode === "GIFT500") {
-            discount += 500;
-            discountElement.textContent = `₹${discount.toFixed(2)}`;
-            totalElement.textContent = `₹${(subtotal + 99 - discount).toFixed(2)}`;
-            alert("Gift card applied successfully!");
-        } else {
-            alert("Invalid gift card code.");
-        }
-    });
-
-    checkoutButton.addEventListener('click', () => {
-        if (cart.length === 0) {
-            alert("Your cart is empty. Add items to proceed.");
-            return;
-        }
-
-        const cartData = {
-            items: cart,
-            subtotal: subtotal,
-            discount: discount,
-            shipping: 99,
-            total: subtotal + 99 - discount
-        };
-
-        localStorage.setItem('cart', JSON.stringify(cartData));
-        window.location.href = '/checkout/checkout.html';
-    });
+    // Define updateOrderSummary to avoid errors
+    function updateOrderSummary() {
+        console.log('Order summary updated.');
+    }
 
     renderCartItems();
+    updateCartCount(); // Call updateCartCount on page load to initialize the count
 });

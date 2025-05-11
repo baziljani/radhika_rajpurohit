@@ -82,10 +82,36 @@
                 }
 
                 if (isValid) {
+                    const userName = email.split('@')[0];
+                    const userDetails = { name: userName, email: email };
+                    localStorage.setItem('loggedInUser', JSON.stringify(userDetails));
+
                     alert('Login successful!');
                     window.location.href = '../account/account.html';
                 }
             });
+
+            function updateNavWithUser() {
+                const loggedInUser = localStorage.getItem('loggedInUser');
+                const nav = document.querySelector('.cart-icon');
+
+                if (loggedInUser) {
+                    const userDetails = JSON.parse(loggedInUser);
+                    const userDisplay = document.createElement('span');
+                    userDisplay.textContent = `Welcome, ${userDetails.name}`;
+                    userDisplay.style.marginLeft = '10px';
+                    userDisplay.style.fontWeight = 'bold';
+                    nav.appendChild(userDisplay);
+                } else {
+                    const loginLink = document.createElement('a');
+                    loginLink.href = '../log_in_sign_up/signup.html';
+                    loginLink.textContent = 'Sign Up';
+                    loginLink.style.marginLeft = '10px';
+                    nav.appendChild(loginLink);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', updateNavWithUser);
         </script>
     </body>
 </html>
